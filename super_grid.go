@@ -20,6 +20,7 @@ type SuperGridElement struct {
 	Obj       fyne.CanvasObject
 	IsBlock   bool
 	Alignment Alignment
+	Fill      bool
 }
 
 type Direction int
@@ -115,6 +116,10 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 		if element.IsBlock {
 			element.Obj.Resize(fyne.NewSize(perElementWidth, element.Obj.Size().Height))
 		}
+
+		if element.Fill {
+			element.Obj.Resize(fyne.NewSize(element.Obj.Size().Width, perElementHeight))
+		}
 	}
 
 	posX := float32(0.0)
@@ -163,6 +168,10 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 	for _, element := range s.elements {
 		if element.IsBlock {
 			element.Obj.Resize(fyne.NewSize(element.Obj.Size().Width, perElementHeight))
+		}
+
+		if element.Fill {
+			element.Obj.Resize(fyne.NewSize(perElementWidth, element.Obj.Size().Height))
 		}
 	}
 

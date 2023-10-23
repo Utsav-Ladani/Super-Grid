@@ -41,21 +41,25 @@ func main() {
 			IsBlock:   false,
 			Obj:       image,
 			Alignment: AlignmentCenter,
+			Fill:      false,
 		},
 		{
 			IsBlock:   true,
 			Obj:       label,
 			Alignment: AlignmentBottom,
+			Fill:      false,
 		},
 		{
 			IsBlock:   false,
 			Obj:       button,
 			Alignment: AlignmentCenter,
+			Fill:      false,
 		},
 		{
 			IsBlock:   true,
 			Obj:       message,
 			Alignment: AlignmentTop,
+			Fill:      true,
 		},
 	}
 
