@@ -59,7 +59,12 @@ func main() {
 		},
 	}
 
-	superGrid := NewSuperGrid(superGridElements)
+	superGridOptions := SuperGridOptions{
+		// direction: DirectionHorizontal,
+		direction: DirectionVertical,
+	}
+
+	superGrid := NewSuperGrid(superGridElements, superGridOptions)
 
 	sWindow.SetContent(superGrid)
 
