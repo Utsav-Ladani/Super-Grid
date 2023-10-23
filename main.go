@@ -21,7 +21,15 @@ func main() {
 	// label := canvas.NewText("Hello World", color.RGBA{255, 0, 0, 255})
 	label.Resize(fyne.NewSize(50, 32))
 
-	button := widget.NewButton("Click Me", func() {})
+	button := widget.NewButton("Click Me", func() {
+		imgSize := image.Size()
+
+		if imgSize.Width == 48 {
+			image.Resize(fyne.NewSize(96, 96))
+		} else {
+			image.Resize(fyne.NewSize(48, 48))
+		}
+	})
 	button.Resize(fyne.NewSize(100, 32))
 
 	message := canvas.NewRectangle(color.RGBA{0, 0, 255, 255})
@@ -30,20 +38,24 @@ func main() {
 
 	superGridElements := []*SuperGridElement{
 		{
-			IsBlock: false,
-			Obj:     image,
+			IsBlock:   false,
+			Obj:       image,
+			Alignment: AlignmentCenter,
 		},
 		{
-			IsBlock: true,
-			Obj:     label,
+			IsBlock:   true,
+			Obj:       label,
+			Alignment: AlignmentBottom,
 		},
 		{
-			IsBlock: false,
-			Obj:     button,
+			IsBlock:   false,
+			Obj:       button,
+			Alignment: AlignmentCenter,
 		},
 		{
-			IsBlock: true,
-			Obj:     message,
+			IsBlock:   true,
+			Obj:       message,
+			Alignment: AlignmentTop,
 		},
 	}
 
