@@ -4,7 +4,6 @@ import (
 	"math"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -32,6 +31,7 @@ const (
 
 type SuperGridOptions struct {
 	direction Direction
+	spacing   float32
 }
 
 func NewSuperGrid(superGridElements []*SuperGridElement, superGridOptions SuperGridOptions) fyne.CanvasObject {
@@ -57,8 +57,6 @@ type SuperGrid struct {
 
 func (s *SuperGrid) CreateRenderer() fyne.WidgetRenderer {
 	canvasObjs := []fyne.CanvasObject{}
-	spacer := layout.NewSpacer()
-	spacer.Resize(fyne.NewSize(20, 10))
 
 	for _, element := range s.Elements {
 		canvasObjs = append(canvasObjs, element.Obj)
@@ -68,7 +66,6 @@ func (s *SuperGrid) CreateRenderer() fyne.WidgetRenderer {
 		superGrid:  s,
 		canvasObjs: canvasObjs,
 		elements:   s.Elements,
-		spacer:     spacer,
 	}
 }
 
@@ -76,7 +73,6 @@ type superGridRenderer struct {
 	superGrid  *SuperGrid
 	canvasObjs []fyne.CanvasObject
 	elements   []*SuperGridElement
-	spacer     fyne.CanvasObject
 }
 
 func (s *superGridRenderer) Destroy() {
@@ -106,7 +102,7 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 	}
 
 	len := len(s.elements)
-	spacersWidth := s.spacer.Size().Width * float32(len-1)
+	spacersWidth := s.superGrid.SuperGridOptions.spacing * float32(len-1)
 	width -= spacersWidth
 
 	perElementWidth := width / float32(blockElements)
@@ -118,14 +114,14 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 		}
 
 		if element.Fill {
-			element.Obj.Resize(fyne.NewSize(element.Obj.Size().Width, perElementHeight))
+			element.Obj.Resize(fyne.NewSize(element.Obj.Size().Width, size.Height))
 		}
 	}
 
 	posX := float32(0.0)
 	posY := float32(0.0)
 
-	spacerWidth := s.spacer.Size().Width
+	spacerWidth := s.superGrid.SuperGridOptions.spacing
 
 	for _, element := range s.elements {
 		elePosX := posX
@@ -159,7 +155,7 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 	}
 
 	len := len(s.elements)
-	spacersHeight := s.spacer.Size().Height * float32(len-1)
+	spacersHeight := s.superGrid.SuperGridOptions.spacing * float32(len-1)
 	height -= spacersHeight
 
 	perElementWidth := float32(math.Min(float64(width), float64(size.Width)))
@@ -171,14 +167,14 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 		}
 
 		if element.Fill {
-			element.Obj.Resize(fyne.NewSize(perElementWidth, element.Obj.Size().Height))
+			element.Obj.Resize(fyne.NewSize(size.Width, element.Obj.Size().Height))
 		}
 	}
 
 	posX := float32(0.0)
 	posY := float32(0.0)
 
-	spacerHeight := s.spacer.Size().Height
+	spacerHeight := s.superGrid.SuperGridOptions.spacing
 
 	for _, element := range s.elements {
 		elePosX := posX
@@ -200,7 +196,7 @@ func (s *superGridRenderer) MinSize() fyne.Size {
 	var width float32 = 0.0
 	var height float32 = 0.0
 
-	spacersWidth := s.spacer.Size().Width * float32(len(s.elements)-1)
+	spacersWidth := s.superGrid.SuperGridOptions.spacing * float32(len(s.elements)-1)
 	width += spacersWidth
 
 	for _, element := range s.elements {

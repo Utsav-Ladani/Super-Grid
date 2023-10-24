@@ -66,6 +66,7 @@ func main() {
 	superGridOptions := SuperGridOptions{
 		// direction: DirectionHorizontal,
 		direction: DirectionVertical,
+		spacing:   10.0,
 	}
 
 	superGrid := NewSuperGrid(superGridElements, superGridOptions)
