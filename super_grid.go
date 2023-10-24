@@ -51,9 +51,30 @@ type SuperGrid struct {
 	SuperGridOptions SuperGridOptions
 }
 
-// func (s *SuperGrid) MinSize() fyne.Size {
-// 	return fyne.NewSize(0, 0)
-// }
+func (s *SuperGrid) Size() fyne.Size {
+	var width float32 = 0.0
+	var height float32 = 0.0
+
+	totalSpace := s.SuperGridOptions.spacing * float32(len(s.Elements)-1)
+
+	if s.SuperGridOptions.direction == DirectionHorizontal {
+		width += totalSpace
+
+		for _, element := range s.Elements {
+			width += element.Obj.Size().Width
+			height = float32(math.Max(float64(height), float64(element.Obj.Size().Height)))
+		}
+	} else {
+		height += totalSpace
+
+		for _, element := range s.Elements {
+			height += element.Obj.Size().Height
+			width = float32(math.Max(float64(width), float64(element.Obj.Size().Width)))
+		}
+	}
+
+	return fyne.NewSize(width, height)
+}
 
 func (s *SuperGrid) CreateRenderer() fyne.WidgetRenderer {
 	canvasObjs := []fyne.CanvasObject{}
@@ -196,15 +217,33 @@ func (s *superGridRenderer) MinSize() fyne.Size {
 	var width float32 = 0.0
 	var height float32 = 0.0
 
-	spacersWidth := s.superGrid.SuperGridOptions.spacing * float32(len(s.elements)-1)
-	width += spacersWidth
+	totalSpace := s.superGrid.SuperGridOptions.spacing * float32(len(s.elements)-1)
 
-	for _, element := range s.elements {
-		if !element.IsBlock {
-			width += element.Obj.Size().Width
+	if s.superGrid.SuperGridOptions.direction == DirectionHorizontal {
+		width += totalSpace
+
+		for _, element := range s.elements {
+			if !element.IsBlock {
+				width += element.Obj.Size().Width
+			}
+
+			if !element.Fill {
+				height = float32(math.Max(float64(height), float64(element.Obj.Size().Height)))
+			}
+
 		}
+	} else {
+		height += totalSpace
 
-		height = float32(math.Max(float64(height), float64(element.Obj.Size().Height)))
+		for _, element := range s.elements {
+			if !element.IsBlock {
+				height += element.Obj.Size().Height
+			}
+
+			if !element.Fill {
+				width = float32(math.Max(float64(width), float64(element.Obj.Size().Width)))
+			}
+		}
 	}
 
 	return fyne.NewSize(width, height)
