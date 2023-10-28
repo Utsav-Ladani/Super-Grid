@@ -7,21 +7,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-type Alignment int
-
-const (
-	AlignmentTop    Alignment = 1
-	AlignmentCenter Alignment = 2
-	AlignmentBottom Alignment = 3
-)
-
-type SuperGridElement struct {
-	Obj       fyne.CanvasObject
-	IsBlock   bool
-	Alignment Alignment
-	Fill      bool
-}
-
 type Direction int
 
 const (
@@ -34,7 +19,7 @@ type SuperGridOptions struct {
 	spacing   float32
 }
 
-func NewSuperGrid(superGridElements []*SuperGridElement, superGridOptions SuperGridOptions) fyne.CanvasObject {
+func NewSuperGrid(superGridOptions SuperGridOptions, superGridElements []*SuperGridElement) fyne.CanvasObject {
 	superGrid := &SuperGrid{
 		Elements:         superGridElements,
 		SuperGridOptions: superGridOptions,
@@ -61,15 +46,15 @@ func (s *SuperGrid) Size() fyne.Size {
 		width += totalSpace
 
 		for _, element := range s.Elements {
-			width += element.Obj.Size().Width
-			height = float32(math.Max(float64(height), float64(element.Obj.Size().Height)))
+			width += element.Size().Width
+			height = float32(math.Max(float64(height), float64(element.Size().Height)))
 		}
 	} else {
 		height += totalSpace
 
 		for _, element := range s.Elements {
-			height += element.Obj.Size().Height
-			width = float32(math.Max(float64(width), float64(element.Obj.Size().Width)))
+			height += element.Size().Height
+			width = float32(math.Max(float64(width), float64(element.Size().Width)))
 		}
 	}
 
@@ -80,7 +65,7 @@ func (s *SuperGrid) CreateRenderer() fyne.WidgetRenderer {
 	canvasObjs := []fyne.CanvasObject{}
 
 	for _, element := range s.Elements {
-		canvasObjs = append(canvasObjs, element.Obj)
+		canvasObjs = append(canvasObjs, element)
 	}
 
 	return &superGridRenderer{
@@ -115,11 +100,11 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 
 	for _, element := range s.elements {
 		if !element.IsBlock {
-			width -= element.Obj.Size().Width
+			width -= element.Size().Width
 		} else {
 			blockElements++
 		}
-		height = float32(math.Max(float64(height), float64(element.Obj.Size().Height)))
+		height = float32(math.Max(float64(height), float64(element.Size().Height)))
 	}
 
 	len := len(s.elements)
@@ -131,11 +116,11 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 
 	for _, element := range s.elements {
 		if element.IsBlock {
-			element.Obj.Resize(fyne.NewSize(perElementWidth, element.Obj.Size().Height))
+			element.Resize(fyne.NewSize(perElementWidth, element.Size().Height))
 		}
 
 		if element.Fill {
-			element.Obj.Resize(fyne.NewSize(element.Obj.Size().Width, size.Height))
+			element.Resize(fyne.NewSize(element.Size().Width, size.Height))
 		}
 	}
 
@@ -149,14 +134,14 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 		elePosY := posY
 
 		if element.Alignment == AlignmentCenter {
-			elePosY += (perElementHeight - element.Obj.Size().Height) / 2
+			elePosY += (perElementHeight - element.Size().Height) / 2
 		} else if element.Alignment == AlignmentBottom {
-			elePosY += (perElementHeight - element.Obj.Size().Height)
+			elePosY += (perElementHeight - element.Size().Height)
 		}
 
-		element.Obj.Move(fyne.NewPos(elePosX, elePosY))
+		element.Move(fyne.NewPos(elePosX, elePosY))
 
-		posX += element.Obj.Size().Width + spacerWidth
+		posX += element.Size().Width + spacerWidth
 	}
 }
 
@@ -168,11 +153,11 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 
 	for _, element := range s.elements {
 		if !element.IsBlock {
-			height -= element.Obj.Size().Height
+			height -= element.Size().Height
 		} else {
 			blockElements++
 		}
-		width = float32(math.Max(float64(width), float64(element.Obj.Size().Width)))
+		width = float32(math.Max(float64(width), float64(element.Size().Width)))
 	}
 
 	len := len(s.elements)
@@ -184,11 +169,11 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 
 	for _, element := range s.elements {
 		if element.IsBlock {
-			element.Obj.Resize(fyne.NewSize(element.Obj.Size().Width, perElementHeight))
+			element.Resize(fyne.NewSize(element.Size().Width, perElementHeight))
 		}
 
 		if element.Fill {
-			element.Obj.Resize(fyne.NewSize(size.Width, element.Obj.Size().Height))
+			element.Resize(fyne.NewSize(size.Width, element.Size().Height))
 		}
 	}
 
@@ -202,14 +187,14 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 		elePosY := posY
 
 		if element.Alignment == AlignmentCenter {
-			elePosX += (perElementWidth - element.Obj.Size().Width) / 2
+			elePosX += (perElementWidth - element.Size().Width) / 2
 		} else if element.Alignment == AlignmentBottom {
-			elePosX += (perElementWidth - element.Obj.Size().Width)
+			elePosX += (perElementWidth - element.Size().Width)
 		}
 
-		element.Obj.Move(fyne.NewPos(elePosX, elePosY))
+		element.Move(fyne.NewPos(elePosX, elePosY))
 
-		posY += element.Obj.Size().Height + spacerHeight
+		posY += element.Size().Height + spacerHeight
 	}
 }
 
@@ -224,11 +209,11 @@ func (s *superGridRenderer) MinSize() fyne.Size {
 
 		for _, element := range s.elements {
 			if !element.IsBlock {
-				width += element.Obj.Size().Width
+				width += element.Size().Width
 			}
 
 			if !element.Fill {
-				height = float32(math.Max(float64(height), float64(element.Obj.Size().Height)))
+				height = float32(math.Max(float64(height), float64(element.Size().Height)))
 			}
 
 		}
@@ -237,11 +222,11 @@ func (s *superGridRenderer) MinSize() fyne.Size {
 
 		for _, element := range s.elements {
 			if !element.IsBlock {
-				height += element.Obj.Size().Height
+				height += element.Size().Height
 			}
 
 			if !element.Fill {
-				width = float32(math.Max(float64(width), float64(element.Obj.Size().Width)))
+				width = float32(math.Max(float64(width), float64(element.Size().Width)))
 			}
 		}
 	}
@@ -254,8 +239,4 @@ func (s *superGridRenderer) Objects() []fyne.CanvasObject {
 }
 
 func (s *superGridRenderer) Refresh() {
-}
-
-func (s *superGridRenderer) Resize(size fyne.Size) {
-	s.Layout(size)
 }
