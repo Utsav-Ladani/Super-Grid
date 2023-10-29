@@ -20,7 +20,6 @@ func main() {
 	image.Resize(fyne.NewSize(48, 48))
 
 	label := canvas.NewRectangle(color.RGBA{255, 255, 0, 255})
-	// label := canvas.NewText("Hello World", color.RGBA{255, 255, 0, 255})
 	label.Resize(fyne.NewSize(50, 32))
 
 	button := widget.NewButton("Click Me", func() {
@@ -33,7 +32,6 @@ func main() {
 	button.Resize(fyne.NewSize(100, 40))
 
 	message := canvas.NewRectangle(color.RGBA{0, 0, 255, 255})
-	// message := canvas.NewText("This is cool message", color.RGBA{0, 0, 255, 255})
 	message.Resize(fyne.NewSize(50, 32))
 
 	superGridElements := []*SuperGridElement{
@@ -47,7 +45,7 @@ func main() {
 		{
 			IsBlock:   true,
 			Obj:       label,
-			Alignment: AlignmentBottom,
+			Alignment: AlignmentEnd,
 			Fill:      false,
 			Margin:    [4]float32{0, 20, 0, 0},
 		},
@@ -60,16 +58,16 @@ func main() {
 		{
 			IsBlock:   true,
 			Obj:       message,
-			Alignment: AlignmentTop,
+			Alignment: AlignmentStart,
 			Fill:      true,
 			Margin:    [4]float32{10, 10, 10, 10},
 		},
 	}
 
 	superGridOptions := SuperGridOptions{
-		// direction: DirectionHorizontal,
-		direction: DirectionVertical,
-		spacing:   10.0,
+		// Direction: DirectionHorizontal,
+		Direction: DirectionVertical,
+		Spacing:   10.0,
 	}
 
 	superGrid = NewSuperGrid(superGridOptions, superGridElements)
@@ -77,11 +75,6 @@ func main() {
 	sWindow.SetContent(superGrid)
 
 	sWindow.Resize(fyne.NewSize(480, 400))
-
-	// go func() {
-	// 	time.Sleep(3 * time.Second)
-	// 	message.Resize(fyne.NewSize(50, 50))
-	// }()
 
 	sWindow.ShowAndRun()
 }

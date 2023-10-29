@@ -8,9 +8,9 @@ import (
 type Alignment int
 
 const (
-	AlignmentTop    Alignment = 1
+	AlignmentStart  Alignment = 1
 	AlignmentCenter Alignment = 2
-	AlignmentBottom Alignment = 3
+	AlignmentEnd    Alignment = 3
 )
 
 type SuperGridElement struct {

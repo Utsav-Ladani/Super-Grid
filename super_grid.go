@@ -15,8 +15,8 @@ const (
 )
 
 type SuperGridOptions struct {
-	direction Direction
-	spacing   float32
+	Direction Direction
+	Spacing   float32
 }
 
 func NewSuperGrid(superGridOptions SuperGridOptions, superGridElements []*SuperGridElement) fyne.CanvasObject {
@@ -40,9 +40,9 @@ func (s *SuperGrid) Size() fyne.Size {
 	var width float32 = 0.0
 	var height float32 = 0.0
 
-	totalSpace := s.SuperGridOptions.spacing * float32(len(s.Elements)-1)
+	totalSpace := s.SuperGridOptions.Spacing * float32(len(s.Elements)-1)
 
-	if s.SuperGridOptions.direction == DirectionHorizontal {
+	if s.SuperGridOptions.Direction == DirectionHorizontal {
 		width += totalSpace
 
 		for _, element := range s.Elements {
@@ -85,7 +85,7 @@ func (s *superGridRenderer) Destroy() {
 }
 
 func (s *superGridRenderer) Layout(size fyne.Size) {
-	if s.superGrid.SuperGridOptions.direction == DirectionHorizontal {
+	if s.superGrid.SuperGridOptions.Direction == DirectionHorizontal {
 		s.LayoutHorizontal(size)
 	} else {
 		s.LayoutVertical(size)
@@ -108,7 +108,7 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 	}
 
 	len := len(s.elements)
-	spacersWidth := s.superGrid.SuperGridOptions.spacing * float32(len-1)
+	spacersWidth := s.superGrid.SuperGridOptions.Spacing * float32(len-1)
 	width -= spacersWidth
 
 	perElementWidth := width / float32(blockElements)
@@ -127,7 +127,7 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 	posX := float32(0.0)
 	posY := float32(0.0)
 
-	spacerWidth := s.superGrid.SuperGridOptions.spacing
+	spacerWidth := s.superGrid.SuperGridOptions.Spacing
 
 	for _, element := range s.elements {
 		elePosX := posX
@@ -135,7 +135,7 @@ func (s *superGridRenderer) LayoutHorizontal(size fyne.Size) {
 
 		if element.Alignment == AlignmentCenter {
 			elePosY += (perElementHeight - element.Size().Height) / 2
-		} else if element.Alignment == AlignmentBottom {
+		} else if element.Alignment == AlignmentEnd {
 			elePosY += (perElementHeight - element.Size().Height)
 		}
 
@@ -161,7 +161,7 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 	}
 
 	len := len(s.elements)
-	spacersHeight := s.superGrid.SuperGridOptions.spacing * float32(len-1)
+	spacersHeight := s.superGrid.SuperGridOptions.Spacing * float32(len-1)
 	height -= spacersHeight
 
 	perElementWidth := float32(math.Min(float64(width), float64(size.Width)))
@@ -180,7 +180,7 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 	posX := float32(0.0)
 	posY := float32(0.0)
 
-	spacerHeight := s.superGrid.SuperGridOptions.spacing
+	spacerHeight := s.superGrid.SuperGridOptions.Spacing
 
 	for _, element := range s.elements {
 		elePosX := posX
@@ -188,7 +188,7 @@ func (s *superGridRenderer) LayoutVertical(size fyne.Size) {
 
 		if element.Alignment == AlignmentCenter {
 			elePosX += (perElementWidth - element.Size().Width) / 2
-		} else if element.Alignment == AlignmentBottom {
+		} else if element.Alignment == AlignmentEnd {
 			elePosX += (perElementWidth - element.Size().Width)
 		}
 
@@ -202,9 +202,9 @@ func (s *superGridRenderer) MinSize() fyne.Size {
 	var width float32 = 0.0
 	var height float32 = 0.0
 
-	totalSpace := s.superGrid.SuperGridOptions.spacing * float32(len(s.elements)-1)
+	totalSpace := s.superGrid.SuperGridOptions.Spacing * float32(len(s.elements)-1)
 
-	if s.superGrid.SuperGridOptions.direction == DirectionHorizontal {
+	if s.superGrid.SuperGridOptions.Direction == DirectionHorizontal {
 		width += totalSpace
 
 		for _, element := range s.elements {
