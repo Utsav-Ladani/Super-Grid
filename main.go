@@ -24,12 +24,10 @@ func main() {
 	label.Resize(fyne.NewSize(50, 32))
 
 	button := widget.NewButton("Click Me", func() {
-		imgSize := image.Size()
-
-		if imgSize.Width == 48 {
-			image.Resize(fyne.NewSize(96, 96))
+		if label.FillColor == (color.RGBA{255, 255, 0, 255}) {
+			label.FillColor = color.RGBA{0, 255, 0, 255}
 		} else {
-			image.Resize(fyne.NewSize(48, 48))
+			label.FillColor = color.RGBA{255, 255, 0, 255}
 		}
 	})
 	button.Resize(fyne.NewSize(100, 40))
